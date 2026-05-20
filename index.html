@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROI · Negociador IA Multiplataforma · Inverfin</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#080C18;--bg2:#0F1629;--bg3:#1A2240;--bg4:#232E52;
+  --border:#1E2A4A;--border2:#2B3A62;
+  --red:#E53E3E;--blue:#3B82F6;--cyan:#06B6D4;--gold:#F59E0B;--green:#10B981;--purple:#8B5CF6;
+  --white:#F1F5F9;--muted:#64748B;--text:#94A3B8;
+  --mono:'JetBrains Mono',monospace;--sans:'Outfit',sans-serif;
+  --r:10px;--rl:14px;
+  --glow-blue:0 0 40px rgba(59,130,246,.08);
+  --glow-gold:0 0 40px rgba(245,158,11,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;min-height:100vh}
+::selection{background:var(--blue);color:var(--white)}
+input[type=range]{width:100%;accent-color:var(--cyan);cursor:pointer;height:5px;margin-top:2px}
+select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--white);font-family:var(--sans);font-size:13px;padding:8px 12px;width:100%;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='%2364748B'%3E%3Cpath d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:border-color .2s}
+select:focus{outline:none;border-color:var(--cyan)}
+
+/* NAV */
+.nav{display:flex;align-items:stretch;border-bottom:1px solid var(--border);background:var(--bg2);padding:0 24px;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:12px;padding:0 20px 0 0;border-right:1px solid var(--border);margin-right:8px;flex-shrink:0}
+.logo-sq{width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:8px;display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:#fff;font-weight:600}
+.logo-t{font-size:14px;font-weight:600;color:var(--white);letter-spacing:-.3px}
+.logo-s{font-size:11px;color:var(--muted)}
+.tab{padding:16px 18px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s;white-space:nowrap;user-select:none;letter-spacing:.01em}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+
+/* PAGES */
+.page{display:none;padding:24px;max-width:1500px;margin:0 auto}
+.page.active{display:block}
+
+/* SECTION */
+.sh{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.sh::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent)}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:20px}
+.m{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px;position:relative;overflow:hidden}
+.m::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.m.ar::before{background:var(--red)}.m.ag::before{background:var(--green)}.m.ao::before{background:var(--gold)}.m.ac::before{background:var(--cyan)}.m.ap::before{background:var(--purple)}
+.m-l{font-size:11px;color:var(--muted);margin-bottom:5px;letter-spacing:.02em}
+.m-v{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--white);line-height:1}
+.m-s{font-size:11px;color:var(--muted);margin-top:4px}
+.m.ar .m-v{color:var(--red)}.m.ag .m-v{color:var(--green)}.m.ao .m-v{color:var(--gold)}.m.ac .m-v{color:var(--cyan)}.m.ap .m-v{color:var(--purple)}
+
+/* CONTROLS */
+.ctrl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.ci{display:flex;flex-direction:column;gap:6px}
+.cl{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+.cv{font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:500}
+
+/* TABLE */
+.tw{border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:16px}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--bg3)}
+th{padding:10px 14px;text-align:left;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border)}
+th:not(:first-child){text-align:right}
+td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px}
+td:not(:first-child){text-align:right;font-family:var(--mono)}
+tr:last-child td{border-bottom:none}
+tr:hover{background:rgba(59,130,246,.04)}
+tr.total-r td{background:var(--bg3);font-weight:600;color:var(--gold)}
+.cat-label{color:var(--white);font-weight:500}
+.sub-label{color:var(--text);padding-left:20px}
+
+/* TOTAL BAR */
+.total-bar{background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(59,130,246,.08));border:1px solid rgba(16,185,129,.25);border-radius:var(--rl);padding:16px 20px;display:grid;grid-template-columns:1fr repeat(3,auto);gap:20px;align-items:center;margin-top:12px}
+.tb-label{font-size:12px;color:var(--muted)}
+.tb-label span{display:block;font-size:10px;color:var(--muted);margin-top:2px}
+.tb-val{font-family:var(--mono);font-size:20px;font-weight:600;text-align:right}
+.tb-green{color:var(--green)}.tb-gold{color:var(--gold)}.tb-cyan{color:var(--cyan)}
+
+/* TIMELINE */
+.timeline{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:16px}
+.tl-month{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px;text-align:center;position:relative}
+.tl-month.active{border-color:var(--cyan);background:rgba(6,182,212,.06)}
+.tl-month.active::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--cyan);border-radius:var(--r) var(--r) 0 0}
+.tl-n{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.tl-v{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--white);margin-top:4px}
+.tl-s{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* NOTE */
+.note{font-size:11px;color:var(--muted);line-height:1.6;padding:10px 14px;border-left:2px solid var(--border);margin-top:12px;background:var(--bg2);border-radius:0 var(--r) var(--r) 0}
+
+/* CHART BAR */
+.chart-row{display:grid;grid-template-columns:140px 1fr 90px;gap:10px;align-items:center;padding:6px 0}
+.chart-label{font-size:12px;color:var(--text);text-align:right}
+.chart-bar-wrap{height:22px;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative}
+.chart-bar-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.chart-val{font-family:var(--mono);font-size:12px;font-weight:500}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo">
+    <div class="logo-sq">IA</div>
+    <div><div class="logo-t">Negociador IA · Multiplataforma</div><div class="logo-s">Inverfin · ROI Analysis · MIT</div></div>
+  </div>
+  <div class="tab active" onclick="showTab('capex')">💰 CAPEX · Inversión Inicial</div>
+  <div class="tab" onclick="showTab('opex')">⚙️ OPEX · Costos Operativos</div>
+  <div class="tab" onclick="showTab('benefits')">📈 Proyección de Beneficios</div>
+  <div class="tab" onclick="showTab('summary')">📊 Resumen ROI</div>
+</nav>
+
+<!-- ═══════════ CAPEX ═══════════ -->
+<div class="page active" id="page-capex">
+  <div class="sh">Parámetros de inversión inicial</div>
+  <div class="ctrl-grid">
+    <div class="ci"><div class="cl">Duración implementación <span class="cv" id="c-dur-v">6 meses</span></div><input type="range" min="3" max="12" step="1" value="6" id="c-dur" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Desarrolladores IA asignados <span class="cv" id="c-devs-v">2</span></div><input type="range" min="1" max="4" step="1" value="2" id="c-devs" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Salario dev IA (USD/mes) <span class="cv" id="c-sal-v">$2.000</span></div><input type="range" min="1000" max="5000" step="100" value="2000" id="c-sal" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Tipo de cambio <span class="cv" id="c-fx-v">7.800 Gs/USD</span></div><input type="range" min="7000" max="8500" step="50" value="7800" id="c-fx" oninput="ua()"></div>
+  </div>
+
+  <div class="sh">Timeline de implementación (CAPEX distribuido por mes)</div>
+  <div class="timeline" id="capex-timeline"></div>
+
+  <div class="sh">Desglose de inversión inicial</div>
+  <div class="tw"><table>
+    <thead><tr><th>Componente</th><th>Detalle</th><th>USD</th><th>MM Gs</th></tr></thead>
+    <tbody id="capex-tbody"></tbody>
+  </table></div>
+
+  <div class="metrics" id="capex-metrics"></div>
+
+  <div class="note" id="capex-note"></div>
+</div>
+
+<!-- ═══════════ OPEX ═══════════ -->
+<div class="page" id="page-opex">
+  <div class="sh">Parámetros operativos anuales</div>
+  <div class="ctrl-grid">
+    <div class="ci"><div class="cl">Usuarios (gestores cobranza) <span class="cv" id="o-users-v">310</span></div><input type="range" min="50" max="600" step="10" value="310" id="o-users" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Factor adopción <span class="cv" id="o-adopt-v">70%</span></div><input type="range" min="20" max="100" step="5" value="70" id="o-adopt" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Consultas/día por gestor <span class="cv" id="o-qpd-v">15</span></div><input type="range" min="5" max="40" step="1" value="15" id="o-qpd" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Tokens/consulta (in+out) <span class="cv" id="o-tok-v">1.400</span></div><input type="range" min="500" max="4000" step="100" value="1400" id="o-tok" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Modelo de IA</div><select id="o-model" onchange="ua()">
+      <option value="gpt4o">GPT-4o ($2.50/$10.00 por 1M tok)</option>
+      <option value="mini">GPT-4o mini ($0.15/$0.60 por 1M tok)</option>
+      <option value="claude">Claude Sonnet ($3.00/$15.00 por 1M tok)</option>
+      <option value="mix">Mix: mini + GPT-4o para complejos</option>
+    </select></div>
+  </div>
+
+  <div class="sh">Desglose de costos operativos anuales</div>
+  <div class="tw"><table>
+    <thead><tr><th>Componente</th><th>Detalle del supuesto</th><th>USD/año</th><th>MM Gs/año</th></tr></thead>
+    <tbody id="opex-tbody"></tbody>
+  </table></div>
+
+  <div class="metrics" id="opex-metrics"></div>
+
+  <div class="note" id="opex-note"></div>
+</div>
+
+<!-- ═══════════ BENEFITS ═══════════ -->
+<div class="page" id="page-benefits">
+  <div class="sh">Base de cartera y cobranza</div>
+  <div class="ctrl-grid">
+    <div class="ci"><div class="cl">Cartera atrasada (MM Gs) <span class="cv" id="b-cart-v">105.178</span></div><input type="range" min="50000" max="200000" step="1000" value="105178" id="b-cart" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Mejora recuperación con IA <span class="cv" id="b-recup-v">3%</span></div><input type="range" min="0.5" max="10" step="0.5" value="3" id="b-recup" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Presup. telecobranza (MM Gs/año) <span class="cv" id="b-tele-v">5.743</span></div><input type="range" min="1000" max="15000" step="100" value="5743" id="b-tele" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Telecobradores <span class="cv" id="b-ntele-v">70</span></div><input type="range" min="10" max="200" step="5" value="70" id="b-ntele" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Reducción costo telecobranza <span class="cv" id="b-redtele-v">15%</span></div><input type="range" min="5" max="40" step="1" value="15" id="b-redtele" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Presup. cobradores externos (MM Gs/año) <span class="cv" id="b-ext-v">19.132</span></div><input type="range" min="5000" max="40000" step="500" value="19132" id="b-ext" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Cobradores externos <span class="cv" id="b-next-v">240</span></div><input type="range" min="50" max="500" step="10" value="240" id="b-next" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Reducción costo cobradores externos <span class="cv" id="b-redext-v">10%</span></div><input type="range" min="2" max="30" step="1" value="10" id="b-redext" oninput="ua()"></div>
+  </div>
+
+  <div class="sh">Proyección de beneficios anuales</div>
+  <div class="tw"><table>
+    <thead><tr><th>Fuente de beneficio</th><th>Supuesto</th><th>MM Gs/año</th></tr></thead>
+    <tbody id="ben-tbody"></tbody>
+  </table></div>
+
+  <div class="sh">Composición del beneficio</div>
+  <div id="ben-chart" style="padding:0 14px"></div>
+
+  <div class="metrics" id="ben-metrics"></div>
+</div>
+
+<!-- ═══════════ SUMMARY ═══════════ -->
+<div class="page" id="page-summary">
+  <div class="sh">Proyección a 5 años</div>
+  <div class="metrics" id="sum-metrics"></div>
+
+  <div class="tw"><table>
+    <thead><tr><th>Año</th><th>CAPEX</th><th>OPEX</th><th>Costo total</th><th>Beneficio</th><th>Flujo neto</th><th>Acumulado</th></tr></thead>
+    <tbody id="sum-tbody"></tbody>
+  </table></div>
+
+  <div class="sh">Indicadores clave</div>
+  <div class="metrics" id="sum-kpis"></div>
+
+  <div class="total-bar" id="sum-total"></div>
+
+  <div class="note" id="sum-note"></div>
+</div>
+
+<script>
+const FMT = (n,d=0) => n.toLocaleString('es-PY',{minimumFractionDigits:d,maximumFractionDigits:d});
+const FMTU = n => '$'+FMT(Math.round(n));
+const LLM = {
+  gpt4o:{in:2.50,out:10.00}, mini:{in:0.15,out:0.60},
+  claude:{in:3.00,out:15.00}, mix:{in:0.70,out:2.80}
+};
+
+function readAll() {
+  return {
+    dur:    +document.getElementById('c-dur').value,
+    devs:   +document.getElementById('c-devs').value,
+    sal:    +document.getElementById('c-sal').value,
+    fx:     +document.getElementById('c-fx').value,
+    users:  +document.getElementById('o-users').value,
+    adopt:  +document.getElementById('o-adopt').value/100,
+    qpd:    +document.getElementById('o-qpd').value,
+    tok:    +document.getElementById('o-tok').value,
+    model:  document.getElementById('o-model').value,
+    cart:   +document.getElementById('b-cart').value,
+    recup:  +document.getElementById('b-recup').value/100,
+    tele:   +document.getElementById('b-tele').value,
+    ntele:  +document.getElementById('b-ntele').value,
+    redtele:+document.getElementById('b-redtele').value/100,
+    ext:    +document.getElementById('b-ext').value,
+    next:   +document.getElementById('b-next').value,
+    redext: +document.getElementById('b-redext').value/100,
+  };
+}
+
+function calcCapex(g) {
+  const devCost = g.devs * g.sal * g.dur;
+  const infraInit = Math.round(g.dur * 800); // $800/mes infra setup
+  const modelDesign = Math.round(g.dur * 1200); // $1200/mes diseño modelos
+  const capacitacion = Math.round(2500 + g.dur * 400); // base + por mes
+  return {
+    equipo: { usd:devCost, detail:`${g.devs} devs × $${FMT(g.sal)}/mes × ${g.dur} meses` },
+    infra:  { usd:infraInit, detail:`Servidores, APIs dev/test, ambientes × ${g.dur} meses` },
+    modelos:{ usd:modelDesign, detail:`Diseño de flujos, prompts, RAG, integración × ${g.dur} meses` },
+    cambio: { usd:capacitacion, detail:`Capacitación ${g.users} gestores + gestión del cambio` },
+    get total() { return this.equipo.usd + this.infra.usd + this.modelos.usd + this.cambio.usd; }
+  };
+}
+
+function calcOpex(g) {
+  const m = LLM[g.model];
+  const effUsers = Math.round(g.users * g.adopt);
+  const tokIn = effUsers * g.qpd * g.tok * 0.65 * 250;
+  const tokOut = effUsers * g.qpd * g.tok * 0.35 * 250;
+  const apiUsd = (tokIn/1e6*m.in) + (tokOut/1e6*m.out);
+  const infraUsd = 3600; // $300/mes cloud
+  const soporteUsd = 4800; // $400/mes soporte
+  const monitoreoUsd = 3600; // $300/mes monitoreo
+  return {
+    api:      { usd:apiUsd, detail:`${FMT(effUsers)} usuarios × ${g.qpd} cons/día × ${FMT(g.tok)} tok × 250 días` },
+    infra:    { usd:infraUsd, detail:'Compute, storage, network · $300/mes' },
+    soporte:  { usd:soporteUsd, detail:'Soporte técnico y mantenimiento · $400/mes' },
+    monitoreo:{ usd:monitoreoUsd, detail:'Monitoreo, optimización, gobernanza · $300/mes' },
+    get total() { return this.api.usd + this.infra.usd + this.soporte.usd + this.monitoreo.usd; }
+  };
+}
+
+function calcBenefits(g) {
+  const recupMM = g.cart * g.recup;
+  const ahorroTeleMM = g.tele * g.redtele;
+  const ahorroExtMM = g.ext * g.redext;
+  return {
+    recuperacion: { mm:recupMM, detail:`${FMT(g.cart)} MM × ${(g.recup*100).toFixed(1)}% mejora recuperación` },
+    ahorroTele:   { mm:ahorroTeleMM, detail:`${FMT(g.tele)} MM × ${(g.redtele*100)}% reducción · ${g.ntele} telecobradores` },
+    ahorroExt:    { mm:ahorroExtMM, detail:`${FMT(g.ext)} MM × ${(g.redext*100)}% reducción · ${g.next} cobradores ext.` },
+    get total() { return this.recuperacion.mm + this.ahorroTele.mm + this.ahorroExt.mm; }
+  };
+}
+
+function renderCapex() {
+  const g = readAll();
+  const c = calcCapex(g);
+  const toMM = usd => Math.round(usd * g.fx / 1e6);
+
+  document.getElementById('c-dur-v').textContent = g.dur+' meses';
+  document.getElementById('c-devs-v').textContent = g.devs;
+  document.getElementById('c-sal-v').textContent = '$'+FMT(g.sal);
+  document.getElementById('c-fx-v').textContent = FMT(g.fx)+' Gs/USD';
+
+  const rows = [
+    {cat:'Equipo de desarrollo',     ...c.equipo},
+    {cat:'Infraestructura inicial',  ...c.infra},
+    {cat:'Diseño de modelos y flujos',...c.modelos},
+    {cat:'Capacitación y gestión del cambio',...c.cambio},
+  ];
+
+  document.getElementById('capex-tbody').innerHTML = rows.map(r =>
+    `<tr><td class="cat-label">${r.cat}</td><td style="color:var(--muted);font-size:12px">${r.detail}</td><td style="font-family:var(--mono);color:var(--white)">${FMTU(r.usd)}</td><td style="font-family:var(--mono);color:var(--cyan)">${FMT(toMM(r.usd))} MM</td></tr>`
+  ).join('') + `<tr class="total-r"><td>TOTAL CAPEX</td><td></td><td>${FMTU(c.total)}</td><td>${FMT(toMM(c.total))} MM Gs</td></tr>`;
+
+  // Timeline
+  document.getElementById('capex-timeline').innerHTML = Array.from({length:g.dur},(_, i)=>{
+    const monthCost = Math.round(c.total / g.dur);
+    return `<div class="tl-month active"><div class="tl-n">Mes ${i+1}</div><div class="tl-v">${FMTU(monthCost)}</div><div class="tl-s">${FMT(toMM(monthCost))} MM</div></div>`;
+  }).join('');
+
+  document.getElementById('capex-metrics').innerHTML = `
+    <div class="m ac"><div class="m-l">CAPEX total</div><div class="m-v">${FMTU(c.total)}</div><div class="m-s">${FMT(toMM(c.total))} MM Gs</div></div>
+    <div class="m ao"><div class="m-l">Costo/mes implementación</div><div class="m-v">${FMTU(c.total/g.dur)}</div><div class="m-s">${g.dur} meses</div></div>
+    <div class="m"><div class="m-l">Equipo (% del CAPEX)</div><div class="m-v">${Math.round(c.equipo.usd/c.total*100)}%</div><div class="m-s">${FMTU(c.equipo.usd)}</div></div>
+    <div class="m"><div class="m-l">No-equipo (infra+modelos+cambio)</div><div class="m-v">${Math.round((c.total-c.equipo.usd)/c.total*100)}%</div><div class="m-s">${FMTU(c.total-c.equipo.usd)}</div></div>
+  `;
+
+  document.getElementById('capex-note').textContent = `Supuestos: ${g.devs} desarrolladores IA a $${FMT(g.sal)}/mes durante ${g.dur} meses. Infraestructura incluye ambientes de desarrollo, APIs de prueba y servidores de staging. Diseño de modelos incluye ingeniería de prompts, RAG, integración con Cobrint/Altitude/Creative/ThinkChat. Capacitación incluye formación de ${g.users} gestores de cobranza + gestión del cambio organizacional. TC: ${FMT(g.fx)} Gs/USD.`;
+}
+
+function renderOpex() {
+  const g = readAll();
+  const o = calcOpex(g);
+  const toMM = usd => Math.round(usd * g.fx / 1e6);
+
+  document.getElementById('o-users-v').textContent = FMT(g.users);
+  document.getElementById('o-adopt-v').textContent = Math.round(g.adopt*100)+'%';
+  document.getElementById('o-qpd-v').textContent = g.qpd;
+  document.getElementById('o-tok-v').textContent = FMT(g.tok);
+
+  const rows = [
+    {cat:'Plataforma IA (tokens, APIs)', ...o.api, sub:true},
+    {cat:'Infraestructura cloud',         ...o.infra},
+    {cat:'Soporte y mantenimiento',       ...o.soporte},
+    {cat:'Monitoreo, optimización y gobernanza',...o.monitoreo},
+  ];
+
+  document.getElementById('opex-tbody').innerHTML = rows.map(r =>
+    `<tr><td class="cat-label">${r.cat}</td><td style="color:var(--muted);font-size:12px">${r.detail}</td><td style="font-family:var(--mono);color:var(--white)">${FMTU(r.usd)}</td><td style="font-family:var(--mono);color:var(--cyan)">${FMT(toMM(r.usd))} MM</td></tr>`
+  ).join('') + `<tr class="total-r"><td>TOTAL OPEX ANUAL</td><td></td><td>${FMTU(o.total)}</td><td>${FMT(toMM(o.total))} MM Gs</td></tr>`;
+
+  const effUsers = Math.round(g.users * g.adopt);
+  document.getElementById('opex-metrics').innerHTML = `
+    <div class="m ar"><div class="m-l">OPEX anual total</div><div class="m-v">${FMTU(o.total)}</div><div class="m-s">${FMT(toMM(o.total))} MM Gs/año</div></div>
+    <div class="m ac"><div class="m-l">Costo API / año</div><div class="m-v">${FMTU(o.api.usd)}</div><div class="m-s">${Math.round(o.api.usd/o.total*100)}% del OPEX</div></div>
+    <div class="m"><div class="m-l">Usuarios efectivos</div><div class="m-v">${FMT(effUsers)}</div><div class="m-s">${g.users} × ${Math.round(g.adopt*100)}% adopción</div></div>
+    <div class="m"><div class="m-l">Costo/usuario/mes</div><div class="m-v">${FMTU(o.total/12/effUsers)}</div><div class="m-s">USD por gestor activo</div></div>
+    <div class="m ao"><div class="m-l">OPEX mensual</div><div class="m-v">${FMTU(o.total/12)}</div><div class="m-s">USD/mes</div></div>
+  `;
+
+  document.getElementById('opex-note').textContent = `Modelo: ${document.getElementById('o-model').options[document.getElementById('o-model').selectedIndex].text}. ${FMT(effUsers)} usuarios activos × ${g.qpd} consultas/día × ${FMT(g.tok)} tokens × 250 días hábiles. Infraestructura cloud incluye compute, storage y network. Soporte incluye ajuste de modelos y QA continuo. Monitoreo incluye métricas de calidad, drift detection y gobernanza IA.`;
+}
+
+function renderBenefits() {
+  const g = readAll();
+  const b = calcBenefits(g);
+
+  document.getElementById('b-cart-v').textContent = FMT(g.cart);
+  document.getElementById('b-recup-v').textContent = (g.recup*100).toFixed(1)+'%';
+  document.getElementById('b-tele-v').textContent = FMT(g.tele);
+  document.getElementById('b-ntele-v').textContent = g.ntele;
+  document.getElementById('b-redtele-v').textContent = Math.round(g.redtele*100)+'%';
+  document.getElementById('b-ext-v').textContent = FMT(g.ext);
+  document.getElementById('b-next-v').textContent = g.next;
+  document.getElementById('b-redext-v').textContent = Math.round(g.redext*100)+'%';
+
+  const rows = [
+    {cat:'Incremento en recuperación de cartera', mm:b.recuperacion.mm, detail:b.recuperacion.detail},
+    {cat:'Reducción costos telecobranza', mm:b.ahorroTele.mm, detail:b.ahorroTele.detail},
+    {cat:'Reducción costos cobradores externos', mm:b.ahorroExt.mm, detail:b.ahorroExt.detail},
+  ];
+
+  document.getElementById('ben-tbody').innerHTML = rows.map(r =>
+    `<tr><td class="cat-label">${r.cat}</td><td style="color:var(--muted);font-size:12px">${r.detail}</td><td style="font-family:var(--mono);color:var(--green);font-weight:600">${FMT(Math.round(r.mm))} MM</td></tr>`
+  ).join('') + `<tr class="total-r"><td>TOTAL BENEFICIO ANUAL</td><td></td><td>${FMT(Math.round(b.total))} MM Gs</td></tr>`;
+
+  // Chart bars
+  const maxMM = Math.max(b.recuperacion.mm, b.ahorroTele.mm, b.ahorroExt.mm, 1);
+  const chartData = [
+    {label:'Recuperación de cartera', mm:b.recuperacion.mm, color:'var(--green)'},
+    {label:'Ahorro telecobranza', mm:b.ahorroTele.mm, color:'var(--cyan)'},
+    {label:'Ahorro cobradores ext.', mm:b.ahorroExt.mm, color:'var(--blue)'},
+  ];
+  document.getElementById('ben-chart').innerHTML = chartData.map(d =>
+    `<div class="chart-row">
+      <div class="chart-label">${d.label}</div>
+      <div class="chart-bar-wrap"><div class="chart-bar-fill" style="width:${Math.round(d.mm/maxMM*100)}%;background:${d.color}"></div></div>
+      <div class="chart-val" style="color:${d.color}">${FMT(Math.round(d.mm))} MM</div>
+    </div>`
+  ).join('');
+
+  document.getElementById('ben-metrics').innerHTML = `
+    <div class="m ag"><div class="m-l">Beneficio total anual</div><div class="m-v">${FMT(Math.round(b.total))} MM</div><div class="m-s">Gs/año</div></div>
+    <div class="m"><div class="m-l">Recuperación cartera (% del total)</div><div class="m-v">${Math.round(b.recuperacion.mm/b.total*100)}%</div><div class="m-s">${FMT(Math.round(b.recuperacion.mm))} MM</div></div>
+    <div class="m"><div class="m-l">Ahorro operativo (% del total)</div><div class="m-v">${Math.round((b.ahorroTele.mm+b.ahorroExt.mm)/b.total*100)}%</div><div class="m-s">${FMT(Math.round(b.ahorroTele.mm+b.ahorroExt.mm))} MM</div></div>
+    <div class="m ac"><div class="m-l">Beneficio mensual</div><div class="m-v">${FMT(Math.round(b.total/12))} MM</div><div class="m-s">Gs/mes</div></div>
+  `;
+}
+
+function renderSummary() {
+  const g = readAll();
+  const capex = calcCapex(g);
+  const opex  = calcOpex(g);
+  const ben   = calcBenefits(g);
+
+  const capexMM = capex.total * g.fx / 1e6;
+  const opexMM  = opex.total * g.fx / 1e6;
+  const benMM   = ben.total;
+
+  // 5-year projection
+  const years = [];
+  let acum = 0;
+  for (let yr=1; yr<=5; yr++) {
+    const cx = yr===1 ? capexMM : 0;
+    const ox = opexMM * (yr===1 ? 1 : 1 + (yr-1)*0.05); // 5% annual increase
+    const bx = benMM * (1 + (yr-1)*0.08); // 8% improvement per year
+    const costoT = cx + ox;
+    const flujo = bx - costoT;
+    acum += flujo;
+    years.push({ yr, cx, ox, costoT, bx, flujo, acum });
+  }
+
+  document.getElementById('sum-tbody').innerHTML = years.map((y,i) =>
+    `<tr ${i===0?'style="background:rgba(6,182,212,.04)"':''}>
+      <td style="font-weight:500;color:var(--white)">Año ${y.yr}${y.yr===1?' (impl.)':''}</td>
+      <td style="font-family:var(--mono);color:${y.cx>0?'var(--gold)':'var(--muted)'}">` + (y.cx>0?FMT(Math.round(y.cx))+' MM':'—') + `</td>
+      <td style="font-family:var(--mono);color:var(--red)">${FMT(Math.round(y.ox))} MM</td>
+      <td style="font-family:var(--mono);color:var(--red)">${FMT(Math.round(y.costoT))} MM</td>
+      <td style="font-family:var(--mono);color:var(--green)">${FMT(Math.round(y.bx))} MM</td>
+      <td style="font-family:var(--mono);color:${y.flujo>=0?'var(--green)':'var(--red)'}">` +
+      (y.flujo>=0?'+':'')+FMT(Math.round(y.flujo))+` MM</td>
+      <td style="font-family:var(--mono);font-weight:600;color:${y.acum>=0?'var(--green)':'var(--red)'}">` +
+      (y.acum>=0?'+':'')+FMT(Math.round(y.acum))+` MM</td>
+    </tr>`
+  ).join('');
+
+  // Payback period (months)
+  const monthlyBen = benMM / 12;
+  const monthlyOpex = opexMM / 12;
+  const monthlyNet = monthlyBen - monthlyOpex;
+  const paybackMonths = monthlyNet > 0 ? Math.ceil(capexMM / monthlyNet) + g.dur : 999;
+  const roi5yr = years[4].acum;
+  const roiPct = ((roi5yr / (capexMM + opexMM*5)) * 100).toFixed(0);
+  const multiple = (years[4].acum / capexMM).toFixed(1);
+
+  document.getElementById('sum-metrics').innerHTML = `
+    <div class="m ag"><div class="m-l">Beneficio acumulado 5 años</div><div class="m-v">${FMT(Math.round(roi5yr))} MM</div><div class="m-s">Gs acumulados</div></div>
+    <div class="m ao"><div class="m-l">CAPEX (inversión única)</div><div class="m-v">${FMT(Math.round(capexMM))} MM</div><div class="m-s">${FMTU(capex.total)} USD</div></div>
+    <div class="m ar"><div class="m-l">OPEX anual (año 1)</div><div class="m-v">${FMT(Math.round(opexMM))} MM</div><div class="m-s">${FMTU(opex.total)} USD/año</div></div>
+    <div class="m ac"><div class="m-l">Beneficio anual (año 1)</div><div class="m-v">${FMT(Math.round(benMM))} MM</div><div class="m-s">Gs/año</div></div>
+  `;
+
+  document.getElementById('sum-kpis').innerHTML = `
+    <div class="m ag"><div class="m-l">Payback period</div><div class="m-v">${paybackMonths < 100 ? paybackMonths+' meses' : 'N/A'}</div><div class="m-s">desde inicio de implementación</div></div>
+    <div class="m ap"><div class="m-l">ROI 5 años</div><div class="m-v">${roiPct}%</div><div class="m-s">beneficio neto / inversión total</div></div>
+    <div class="m ao"><div class="m-l">Múltiplo sobre CAPEX</div><div class="m-v">${multiple}×</div><div class="m-s">beneficio acumulado / CAPEX</div></div>
+    <div class="m ac"><div class="m-l">Flujo neto año 1</div><div class="m-v">${(years[0].flujo>=0?'+':'')+FMT(Math.round(years[0].flujo))} MM</div><div class="m-s">Gs netos primer año</div></div>
+  `;
+
+  document.getElementById('sum-total').innerHTML = `
+    <div><div class="tb-label">NEGOCIADOR IA · RESUMEN EJECUTIVO<span>310 gestores · Cobrint · Altitude · Creative · ThinkChat</span></div></div>
+    <div><div class="tb-label">CAPEX</div><div class="tb-val tb-gold">${FMT(Math.round(capexMM))} MM</div></div>
+    <div><div class="tb-label">Beneficio neto año 1</div><div class="tb-val tb-green">${(years[0].flujo>=0?'+':'')+FMT(Math.round(years[0].flujo))} MM</div></div>
+    <div><div class="tb-label">Payback</div><div class="tb-val tb-cyan">${paybackMonths < 100 ? paybackMonths+' meses' : 'N/A'}</div></div>
+  `;
+
+  document.getElementById('sum-note').textContent = `Proyección a 5 años. Supuestos: OPEX crece 5% anual (inflación + escalamiento). Beneficios crecen 8% anual (mejora de modelos + adopción creciente). CAPEX se paga íntegramente en año 1. Cartera atrasada: ${FMT(g.cart)} MM Gs. Telecobradores: ${g.ntele} (presupuesto ${FMT(g.tele)} MM Gs/año). Cobradores externos: ${g.next} (presupuesto ${FMT(g.ext)} MM Gs/año). Tipo de cambio: ${FMT(g.fx)} Gs/USD.`;
+}
+
+function ua() {
+  renderCapex();
+  renderOpex();
+  renderBenefits();
+  renderSummary();
+}
+
+function showTab(name) {
+  const names=['capex','opex','benefits','summary'];
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',names[i]===name));
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===`page-${name}`));
+}
+
+ua();
+</script>
+</body>
+</html>
