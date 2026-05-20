@@ -418,6 +418,7 @@ function showTab(name){
   const names=['capex','opex','benefits','summary'];
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',names[i]===name));
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===`page-${name}`));
+  ua();
 }
 ua();
 </script>
