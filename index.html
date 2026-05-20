@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ROI Analysis · AI-Powered Collection Negotiator · Inverfin</title>
+<title>ROI Analysis · Negociador IA Multiplataforma · Inverfin</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -90,30 +90,30 @@ tr.total-r td{background:var(--bg3);font-weight:600;color:var(--gold)}
 <nav class="nav">
   <div class="logo">
     <div class="logo-sq">AI</div>
-    <div><div class="logo-t">AI Collection Negotiator · ROI</div><div class="logo-s">Inverfin · Financial Analysis</div></div>
+    <div><div class="logo-t">Negociador IA · Análisis ROI</div><div class="logo-s">Inverfin · Análisis Financiero · MIT</div></div>
   </div>
-  <div class="tab active" onclick="showTab('capex')">💰 CAPEX · Initial Investment</div>
-  <div class="tab" onclick="showTab('opex')">⚙️ OPEX · Annual Operating Costs</div>
-  <div class="tab" onclick="showTab('benefits')">📈 Projected Benefits</div>
-  <div class="tab" onclick="showTab('summary')">📊 ROI Summary</div>
+  <div class="tab active" onclick="showTab('capex')">💰 CAPEX · Inversión Inicial</div>
+  <div class="tab" onclick="showTab('opex')">⚙️ OPEX · Costos Operativos Anuales</div>
+  <div class="tab" onclick="showTab('benefits')">📈 Proyección de Beneficios</div>
+  <div class="tab" onclick="showTab('summary')">📊 Resumen ROI</div>
 </nav>
 
 <!-- ═══════════ CAPEX ═══════════ -->
 <div class="page active" id="page-capex">
-  <div class="sh">Initial investment parameters</div>
+  <div class="sh">Parámetros de inversión inicial</div>
   <div class="ctrl-grid">
-    <div class="ci"><div class="cl">Implementation timeline <span class="cv" id="c-dur-v">6 months</span></div><input type="range" min="3" max="12" step="1" value="6" id="c-dur" oninput="ua()"></div>
-    <div class="ci"><div class="cl">AI Developers assigned <span class="cv" id="c-devs-v">2</span></div><input type="range" min="1" max="4" step="1" value="2" id="c-devs" oninput="ua()"></div>
-    <div class="ci"><div class="cl">Dev salary (USD/mo) <span class="cv" id="c-sal-v">$2,000</span></div><input type="range" min="1000" max="5000" step="100" value="2000" id="c-sal" oninput="ua()"></div>
-    <div class="ci"><div class="cl">Exchange rate (Gs/USD) <span class="cv" id="c-fx-v">7,800</span></div><input type="range" min="7000" max="8500" step="50" value="7800" id="c-fx" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Duración implementación <span class="cv" id="c-dur-v">6 meses</span></div><input type="range" min="3" max="12" step="1" value="6" id="c-dur" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Desarrolladores IA asignados <span class="cv" id="c-devs-v">2</span></div><input type="range" min="1" max="4" step="1" value="2" id="c-devs" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Salario dev IA (USD/mes) <span class="cv" id="c-sal-v">$2,000</span></div><input type="range" min="1000" max="5000" step="100" value="2000" id="c-sal" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Tipo de cambio (Gs/USD) <span class="cv" id="c-fx-v">7,800</span></div><input type="range" min="7000" max="8500" step="50" value="7800" id="c-fx" oninput="ua()"></div>
   </div>
 
-  <div class="sh">Implementation timeline (CAPEX distributed by month)</div>
+  <div class="sh">Duración implementación (CAPEX distributed by month)</div>
   <div class="timeline" id="capex-timeline" style="grid-template-columns:repeat(auto-fit,minmax(100px,1fr))"></div>
 
-  <div class="sh">Investment breakdown</div>
+  <div class="sh">Desglose de inversión</div>
   <div class="tw"><table>
-    <thead><tr><th>Component</th><th>Assumptions</th><th>USD</th></tr></thead>
+    <thead><tr><th>Componente</th><th>Supuestos</th><th>USD</th></tr></thead>
     <tbody id="capex-tbody"></tbody>
   </table></div>
 
@@ -123,23 +123,23 @@ tr.total-r td{background:var(--bg3);font-weight:600;color:var(--gold)}
 
 <!-- ═══════════ OPEX ═══════════ -->
 <div class="page" id="page-opex">
-  <div class="sh">Annual operating parameters</div>
+  <div class="sh">Parámetros operativos anuales</div>
   <div class="ctrl-grid">
-    <div class="ci"><div class="cl">Collection agents <span class="cv" id="o-users-v">310</span></div><input type="range" min="50" max="600" step="10" value="310" id="o-users" oninput="ua()"></div>
-    <div class="ci"><div class="cl">Adoption rate <span class="cv" id="o-adopt-v">70%</span></div><input type="range" min="20" max="100" step="5" value="70" id="o-adopt" oninput="ua()"></div>
-    <div class="ci"><div class="cl">Queries/day per agent <span class="cv" id="o-qpd-v">15</span></div><input type="range" min="5" max="40" step="1" value="15" id="o-qpd" oninput="ua()"></div>
-    <div class="ci"><div class="cl">Tokens/query (in+out) <span class="cv" id="o-tok-v">1,400</span></div><input type="range" min="500" max="4000" step="100" value="1400" id="o-tok" oninput="ua()"></div>
-    <div class="ci"><div class="cl">AI Model</div><select id="o-model" onchange="ua()">
-      <option value="gpt4o">GPT-4o ($2.50/$10.00 per 1M tokens)</option>
-      <option value="mini">GPT-4o mini ($0.15/$0.60 per 1M tokens)</option>
-      <option value="claude">Claude Sonnet ($3.00/$15.00 per 1M tokens)</option>
-      <option value="mix">Mix: mini + GPT-4o for complex cases</option>
+    <div class="ci"><div class="cl">Gestores de cobranza <span class="cv" id="o-users-v">310</span></div><input type="range" min="50" max="600" step="10" value="310" id="o-users" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Factor de adopción <span class="cv" id="o-adopt-v">70%</span></div><input type="range" min="20" max="100" step="5" value="70" id="o-adopt" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Consultas/día por gestor <span class="cv" id="o-qpd-v">15</span></div><input type="range" min="5" max="40" step="1" value="15" id="o-qpd" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Tokens/consulta (in+out) <span class="cv" id="o-tok-v">1,400</span></div><input type="range" min="500" max="4000" step="100" value="1400" id="o-tok" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Modelo de IA</div><select id="o-model" onchange="ua()">
+      <option value="gpt4o">GPT-4o ($2.50/$10.00 por 1M tokens)</option>
+      <option value="mini">GPT-4o mini ($0.15/$0.60 por 1M tokens)</option>
+      <option value="claude">Claude Sonnet ($3.00/$15.00 por 1M tokens)</option>
+      <option value="mix">Mix: mini + GPT-4o para casos complejos</option>
     </select></div>
   </div>
 
-  <div class="sh">Annual operating cost breakdown</div>
+  <div class="sh">Desglose de costos operativos anuales</div>
   <div class="tw"><table>
-    <thead><tr><th>Component</th><th>Assumptions</th><th>USD/year</th></tr></thead>
+    <thead><tr><th>Componente</th><th>Supuestos</th><th>USD/año</th></tr></thead>
     <tbody id="opex-tbody"></tbody>
   </table></div>
 
@@ -149,25 +149,25 @@ tr.total-r td{background:var(--bg3);font-weight:600;color:var(--gold)}
 
 <!-- ═══════════ BENEFITS ═══════════ -->
 <div class="page" id="page-benefits">
-  <div class="sh">Collection portfolio & cost base</div>
+  <div class="sh">Cartera de cobranza y base de costos</div>
   <div class="ctrl-grid">
-    <div class="ci"><div class="cl">Delinquent portfolio (USD) <span class="cv" id="b-cart-v">$13.5M</span></div><input type="range" min="5000000" max="30000000" step="100000" value="13484359" id="b-cart" oninput="ua()"></div>
-    <div class="ci"><div class="cl">Recovery improvement with AI <span class="cv" id="b-recup-v">3.0%</span></div><input type="range" min="0.5" max="10" step="0.5" value="3" id="b-recup" oninput="ua()"></div>
-    <div class="ci"><div class="cl">Internal telecobranza budget (USD/yr) <span class="cv" id="b-tele-v">$736K</span></div><input type="range" min="100000" max="2000000" step="10000" value="736282" id="b-tele" oninput="ua()"></div>
-    <div class="ci"><div class="cl">Internal collectors <span class="cv" id="b-ntele-v">70</span></div><input type="range" min="10" max="200" step="5" value="70" id="b-ntele" oninput="ua()"></div>
-    <div class="ci"><div class="cl">Internal cost reduction <span class="cv" id="b-redtele-v">15%</span></div><input type="range" min="5" max="40" step="1" value="15" id="b-redtele" oninput="ua()"></div>
-    <div class="ci"><div class="cl">External collectors budget (USD/yr) <span class="cv" id="b-ext-v">$2.45M</span></div><input type="range" min="500000" max="6000000" step="50000" value="2452821" id="b-ext" oninput="ua()"></div>
-    <div class="ci"><div class="cl">External collectors <span class="cv" id="b-next-v">240</span></div><input type="range" min="50" max="500" step="10" value="240" id="b-next" oninput="ua()"></div>
-    <div class="ci"><div class="cl">External cost reduction <span class="cv" id="b-redext-v">10%</span></div><input type="range" min="2" max="30" step="1" value="10" id="b-redext" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Cartera atrasada (USD) <span class="cv" id="b-cart-v">$13.5M</span></div><input type="range" min="5000000" max="30000000" step="100000" value="13484359" id="b-cart" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Mejora recuperación con IA <span class="cv" id="b-recup-v">3.0%</span></div><input type="range" min="0.5" max="10" step="0.5" value="3" id="b-recup" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Presupuesto telecobranza (USD/año) <span class="cv" id="b-tele-v">$736K</span></div><input type="range" min="100000" max="2000000" step="10000" value="736282" id="b-tele" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Telecobradores internos <span class="cv" id="b-ntele-v">70</span></div><input type="range" min="10" max="200" step="5" value="70" id="b-ntele" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Reducción costo interno <span class="cv" id="b-redtele-v">15%</span></div><input type="range" min="5" max="40" step="1" value="15" id="b-redtele" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Presupuesto cobradores externos (USD/año) <span class="cv" id="b-ext-v">$2.45M</span></div><input type="range" min="500000" max="6000000" step="50000" value="2452821" id="b-ext" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Cobradores externos <span class="cv" id="b-next-v">240</span></div><input type="range" min="50" max="500" step="10" value="240" id="b-next" oninput="ua()"></div>
+    <div class="ci"><div class="cl">Reducción costo externo <span class="cv" id="b-redext-v">10%</span></div><input type="range" min="2" max="30" step="1" value="10" id="b-redext" oninput="ua()"></div>
   </div>
 
-  <div class="sh">Projected annual benefits</div>
+  <div class="sh">Proyección de beneficios anuales</div>
   <div class="tw"><table>
-    <thead><tr><th>Benefit source</th><th>Assumptions</th><th>USD/year</th></tr></thead>
+    <thead><tr><th>Fuente de beneficio</th><th>Supuestos</th><th>USD/año</th></tr></thead>
     <tbody id="ben-tbody"></tbody>
   </table></div>
 
-  <div class="sh">Benefit composition</div>
+  <div class="sh">Composición del beneficio</div>
   <div id="ben-chart" style="padding:0 14px"></div>
 
   <div class="metrics" id="ben-metrics"></div>
@@ -175,15 +175,15 @@ tr.total-r td{background:var(--bg3);font-weight:600;color:var(--gold)}
 
 <!-- ═══════════ SUMMARY ═══════════ -->
 <div class="page" id="page-summary">
-  <div class="sh">5-year projection</div>
+  <div class="sh">Proyección a 5 años</div>
   <div class="metrics" id="sum-metrics"></div>
 
   <div class="tw"><table>
-    <thead><tr><th>Year</th><th>CAPEX</th><th>OPEX</th><th>Total cost</th><th>Benefit</th><th>Net flow</th><th>Cumulative</th></tr></thead>
+    <thead><tr><th>Año</th><th>CAPEX</th><th>OPEX</th><th>Costo total</th><th>Beneficio</th><th>Flujo neto</th><th>Acumulado</th></tr></thead>
     <tbody id="sum-tbody"></tbody>
   </table></div>
 
-  <div class="sh">Key indicators</div>
+  <div class="sh">Indicadores clave</div>
   <div class="metrics" id="sum-kpis"></div>
 
   <div class="total-bar" id="sum-total"></div>
@@ -240,16 +240,16 @@ function calcBen(g) {
 
 function renderCapex() {
   const g = G(), c = calcCapex(g);
-  el('c-dur-v').textContent = g.dur+' months';
+  el('c-dur-v').textContent = g.dur+' meses';
   el('c-devs-v').textContent = g.devs;
   el('c-sal-v').textContent = FMU(g.sal);
   el('c-fx-v').textContent = FM(g.fx);
 
   const rows = [
-    ['Development team', `${g.devs} AI devs × ${FMU(g.sal)}/mo × ${g.dur} months`, c.equipo],
-    ['Initial infrastructure', `Dev/test environments, staging servers × ${g.dur} mo`, c.infra],
-    ['Model design & integration', `Prompt engineering, RAG, Cobrint/Altitude/Creative integration`, c.modelos],
-    ['Training & change management', `Training ${g.users} agents + organizational change`, c.cambio],
+    ['Equipo de desarrollo', `${g.devs} devs IA × ${FMU(g.sal)}/mo × ${g.dur} meses`, c.equipo],
+    ['Infraestructura inicial', `Ambientes dev/test, servidores staging × ${g.dur} mo`, c.infra],
+    ['Diseño de modelos e integración', `Ingeniería de prompts, RAG, integración Cobrint/Altitude/Creative`, c.modelos],
+    ['Capacitación y gestión del cambio', `Capacitación gestores + gestión del cambio organizacional`, c.cambio],
   ];
 
   el('capex-tbody').innerHTML = rows.map(([cat,det,usd]) =>
@@ -258,16 +258,16 @@ function renderCapex() {
 
   el('capex-timeline').innerHTML = Array.from({length:g.dur},(_,i)=>{
     const mc = Math.round(c.total/g.dur);
-    return `<div class="tl-month active"><div class="tl-n">Month ${i+1}</div><div class="tl-v">${FMK(mc)}</div></div>`;
+    return `<div class="tl-month active"><div class="tl-n">Mes ${i+1}</div><div class="tl-v">${FMK(mc)}</div></div>`;
   }).join('');
 
   el('capex-metrics').innerHTML = `
-    <div class="m ac"><div class="m-l">Total CAPEX</div><div class="m-v">${FMK(c.total)}</div><div class="m-s">one-time investment</div></div>
-    <div class="m ao"><div class="m-l">Cost/month (impl.)</div><div class="m-v">${FMK(c.total/g.dur)}</div><div class="m-s">${g.dur} months</div></div>
-    <div class="m"><div class="m-l">Team (% of CAPEX)</div><div class="m-v">${Math.round(c.equipo/c.total*100)}%</div><div class="m-s">${FMU(c.equipo)}</div></div>
-    <div class="m"><div class="m-l">Non-team costs</div><div class="m-v">${Math.round((c.total-c.equipo)/c.total*100)}%</div><div class="m-s">${FMU(c.total-c.equipo)}</div></div>`;
+    <div class="m ac"><div class="m-l">CAPEX total</div><div class="m-v">${FMK(c.total)}</div><div class="m-s">inversión única</div></div>
+    <div class="m ao"><div class="m-l">Costo/mes (impl.)</div><div class="m-v">${FMK(c.total/g.dur)}</div><div class="m-s">${g.dur} meses</div></div>
+    <div class="m"><div class="m-l">Equipo (% del CAPEX)</div><div class="m-v">${Math.round(c.equipo/c.total*100)}%</div><div class="m-s">${FMU(c.equipo)}</div></div>
+    <div class="m"><div class="m-l">Costos no-equipo</div><div class="m-v">${Math.round((c.total-c.equipo)/c.total*100)}%</div><div class="m-s">${FMU(c.total-c.equipo)}</div></div>`;
 
-  el('capex-note').textContent = `Assumptions: ${g.devs} AI developers at ${FMU(g.sal)}/month for ${g.dur} months. Infrastructure includes dev/test environments and staging APIs. Model design covers prompt engineering, RAG pipelines, and integration with Cobrint, Altitude, Creative, and ThinkChat platforms. Training covers ${g.users} collection agents plus organizational change management. Exchange rate: ${FM(g.fx)} Gs/USD for local cost reference.`;
+  el('capex-note').textContent = `Supuestos: ${g.devs} desarrolladores IA a ${FMU(g.sal)}/month . Infraestructura incluye ambientes dev/test y APIs staging. Diseño de modelos incluye ingeniería de prompts, RAG e integración con Cobrint, Altitude, Creative, and ThinkChat . Capacitación incluye ${g.users} gestores de cobranza y gestión del cambio organizacional. Tipo de cambio: ${FM(g.fx)} Gs/USD para referencia de costo local.`;
 }
 
 function renderOpex() {
@@ -278,28 +278,28 @@ function renderOpex() {
   el('o-tok-v').textContent = FM(g.tok);
 
   const rows = [
-    ['AI Platform (tokens, APIs)', `${FM(o.eff)} active users × ${g.qpd} queries/day × ${FM(g.tok)} tokens × 250 days`, o.api],
-    ['Cloud infrastructure', 'Compute, storage, network · $300/mo', o.infra],
-    ['Support & maintenance', 'Model tuning, QA, bug fixes · $400/mo', o.soporte],
-    ['Monitoring, optimization & governance', 'Quality metrics, drift detection, compliance · $300/mo', o.monitoreo],
+    ['Plataforma IA (tokens, APIs)', `${FM(o.eff)} usuarios activos × ${g.qpd} consultas/día × ${FM(g.tok)} tokens × 250 días`, o.api],
+    ['Infraestructura cloud', 'Compute, storage, red · $300/mo', o.infra],
+    ['Soporte y mantenimiento', 'Ajuste de modelos, QA, correcciones · $400/mo', o.soporte],
+    ['Monitoreo, optimización y gobernanza', 'Métricas de calidad, detección de drift, cumplimiento · $300/mo', o.monitoreo],
   ];
 
   el('opex-tbody').innerHTML = rows.map(([cat,det,usd]) =>
     `<tr><td class="cat-label">${cat}</td><td style="color:var(--muted);font-size:12px">${det}</td><td style="font-family:var(--mono);color:var(--white)">${FMU(usd)}</td></tr>`
-  ).join('') + `<tr class="total-r"><td>TOTAL ANNUAL OPEX</td><td></td><td>${FMU(o.total)}</td></tr>`;
+  ).join('') + `<tr class="total-r"><td>TOTAL OPEX ANUAL</td><td></td><td>${FMU(o.total)}</td></tr>`;
 
   el('opex-metrics').innerHTML = `
-    <div class="m ar"><div class="m-l">Annual OPEX</div><div class="m-v">${FMK(o.total)}</div><div class="m-s">USD/year</div></div>
-    <div class="m ac"><div class="m-l">API cost / year</div><div class="m-v">${FMU(o.api)}</div><div class="m-s">${Math.round(o.api/o.total*100)}% of OPEX</div></div>
-    <div class="m"><div class="m-l">Active users</div><div class="m-v">${FM(o.eff)}</div><div class="m-s">${g.users} × ${Math.round(g.adopt*100)}%</div></div>
-    <div class="m"><div class="m-l">Cost/user/month</div><div class="m-v">${FMU(o.total/12/o.eff)}</div><div class="m-s">per active agent</div></div>
-    <div class="m ao"><div class="m-l">Monthly OPEX</div><div class="m-v">${FMU(o.total/12)}</div><div class="m-s">USD/month</div></div>`;
+    <div class="m ar"><div class="m-l">OPEX anual</div><div class="m-v">${FMK(o.total)}</div><div class="m-s">USD/año</div></div>
+    <div class="m ac"><div class="m-l">Costo API / año</div><div class="m-v">${FMU(o.api)}</div><div class="m-s">${Math.round(o.api/o.total*100)}% del OPEX</div></div>
+    <div class="m"><div class="m-l">Usuarios activos</div><div class="m-v">${FM(o.eff)}</div><div class="m-s">${g.users} × ${Math.round(g.adopt*100)}%</div></div>
+    <div class="m"><div class="m-l">Costo/usuario/mes</div><div class="m-v">${FMU(o.total/12/o.eff)}</div><div class="m-s">por gestor activo</div></div>
+    <div class="m ao"><div class="m-l">OPEX mensual</div><div class="m-v">${FMU(o.total/12)}</div><div class="m-s">USD/mes</div></div>`;
 
   const modelLabel = el('o-model').options[el('o-model').selectedIndex].text;
-  el('opex-note').textContent = `Model: ${modelLabel}. ${FM(o.eff)} active users × ${g.qpd} queries/day × ${FM(g.tok)} tokens/query × 250 business days. Cloud infrastructure includes compute, storage, and networking. Support covers ongoing model tuning and QA. Monitoring includes quality metrics, drift detection, and AI governance compliance.`;
+  el('opex-note').textContent = `Modelo: ${modelLabel}. ${FM(o.eff)} usuarios activos × ${g.qpd} consultas/día × ${FM(g.tok)} tokens/query × 250 días hábiles. Infraestructura cloud includes compute, storage, and networking. Soporte incluye ajuste continuo de modelos y QA. Monitoreo incluye métricas de calidad, detección de drift y gobernanza IA.`;
 }
 
-function renderBenefits() {
+function renderBeneficios() {
   const g = G(), b = calcBen(g);
   el('b-cart-v').textContent = FMK(g.cart);
   el('b-recup-v').textContent = (g.recup*100).toFixed(1)+'%';
@@ -311,30 +311,30 @@ function renderBenefits() {
   el('b-redext-v').textContent = Math.round(g.redext*100)+'%';
 
   const rows = [
-    ['Increased portfolio recovery', `${FMK(g.cart)} portfolio × ${(g.recup*100).toFixed(1)}% improvement`, b.recup],
-    ['Internal collection cost reduction', `${FMK(g.tele)}/yr × ${Math.round(g.redtele*100)}% reduction · ${g.ntele} agents`, b.aTele],
-    ['External collection cost reduction', `${FMK(g.ext)}/yr × ${Math.round(g.redext*100)}% reduction · ${g.next} collectors`, b.aExt],
+    ['Incremento en recuperación de cartera', `${FMK(g.cart)} cartera × ${(g.recup*100).toFixed(1)}% mejora`, b.recup],
+    ['Reducción costos telecobranza interna', `${FMK(g.tele)}/yr × ${Math.round(g.redtele*100)}% reducción · ${g.ntele} agentes`, b.aTele],
+    ['External collection cost reducción', `${FMK(g.ext)}/yr × ${Math.round(g.redext*100)}% reducción · ${g.next} cobradores`, b.aExt],
   ];
 
   el('ben-tbody').innerHTML = rows.map(([cat,det,usd]) =>
     `<tr><td class="cat-label">${cat}</td><td style="color:var(--muted);font-size:12px">${det}</td><td style="font-family:var(--mono);color:var(--green);font-weight:600">${FMK(usd)}</td></tr>`
-  ).join('') + `<tr class="total-r"><td>TOTAL ANNUAL BENEFIT</td><td></td><td>${FMK(b.total)}</td></tr>`;
+  ).join('') + `<tr class="total-r"><td>TOTAL BENEFICIO ANUAL</td><td></td><td>${FMK(b.total)}</td></tr>`;
 
   const maxU = Math.max(b.recup, b.aTele, b.aExt, 1);
   const chartData = [
-    {label:'Portfolio recovery', usd:b.recup, color:'var(--green)'},
-    {label:'Internal collection savings', usd:b.aTele, color:'var(--cyan)'},
-    {label:'External collection savings', usd:b.aExt, color:'var(--blue)'},
+    {label:'Recuperación de cartera', usd:b.recup, color:'var(--green)'},
+    {label:'Ahorro telecobranza interna', usd:b.aTele, color:'var(--cyan)'},
+    {label:'Ahorro cobradores externos', usd:b.aExt, color:'var(--blue)'},
   ];
   el('ben-chart').innerHTML = chartData.map(d =>
     `<div class="chart-row"><div class="chart-label">${d.label}</div><div class="chart-bar-wrap"><div class="chart-bar-fill" style="width:${Math.round(d.usd/maxU*100)}%;background:${d.color}"></div></div><div class="chart-val" style="color:${d.color}">${FMK(d.usd)}</div></div>`
   ).join('');
 
   el('ben-metrics').innerHTML = `
-    <div class="m ag"><div class="m-l">Total annual benefit</div><div class="m-v">${FMK(b.total)}</div><div class="m-s">USD/year</div></div>
-    <div class="m"><div class="m-l">Recovery (% of total)</div><div class="m-v">${Math.round(b.recup/b.total*100)}%</div><div class="m-s">${FMK(b.recup)}</div></div>
-    <div class="m"><div class="m-l">Cost savings (% of total)</div><div class="m-v">${Math.round((b.aTele+b.aExt)/b.total*100)}%</div><div class="m-s">${FMK(b.aTele+b.aExt)}</div></div>
-    <div class="m ac"><div class="m-l">Monthly benefit</div><div class="m-v">${FMK(b.total/12)}</div><div class="m-s">USD/month</div></div>`;
+    <div class="m ag"><div class="m-l">Beneficio total anual</div><div class="m-v">${FMK(b.total)}</div><div class="m-s">USD/año</div></div>
+    <div class="m"><div class="m-l">Recuperación (% del total)</div><div class="m-v">${Math.round(b.recup/b.total*100)}%</div><div class="m-s">${FMK(b.recup)}</div></div>
+    <div class="m"><div class="m-l">Ahorro operativo (% del total)</div><div class="m-v">${Math.round((b.aTele+b.aExt)/b.total*100)}%</div><div class="m-s">${FMK(b.aTele+b.aExt)}</div></div>
+    <div class="m ac"><div class="m-l">Beneficio mensual</div><div class="m-v">${FMK(b.total/12)}</div><div class="m-s">USD/mes</div></div>`;
 }
 
 function renderSummary() {
@@ -355,7 +355,7 @@ function renderSummary() {
 
   el('sum-tbody').innerHTML = years.map((y,i) =>
     `<tr ${i===0?'style="background:rgba(6,182,212,.04)"':''}>
-      <td style="font-weight:500;color:var(--white)">Year ${y.yr}${y.yr===1?' (impl.)':''}</td>
+      <td style="font-weight:500;color:var(--white)">Año ${y.yr}${y.yr===1?' (impl.)':''}</td>
       <td style="color:${y.cx>0?'var(--gold)':'var(--muted)'}">${y.cx>0?FMU(y.cx):'—'}</td>
       <td style="color:var(--red)">${FMU(y.ox)}</td>
       <td style="color:var(--red)">${FMU(y.cost)}</td>
@@ -375,26 +375,26 @@ function renderSummary() {
   const irr = estimateIRR(years, cU);
 
   el('sum-metrics').innerHTML = `
-    <div class="m ag"><div class="m-l">5-year cumulative benefit</div><div class="m-v">${FMK(years[4].acum)}</div><div class="m-s">net of all costs</div></div>
-    <div class="m ao"><div class="m-l">CAPEX (one-time)</div><div class="m-v">${FMK(cU)}</div><div class="m-s">initial investment</div></div>
-    <div class="m ar"><div class="m-l">Annual OPEX (Year 1)</div><div class="m-v">${FMK(oU)}</div><div class="m-s">operating costs</div></div>
-    <div class="m ac"><div class="m-l">Annual benefit (Year 1)</div><div class="m-v">${FMK(bU)}</div><div class="m-s">total savings + recovery</div></div>`;
+    <div class="m ag"><div class="m-l">Beneficio acumulado 5 años</div><div class="m-v">${FMK(years[4].acum)}</div><div class="m-s">neto de todos los costos</div></div>
+    <div class="m ao"><div class="m-l">CAPEX (único)</div><div class="m-v">${FMK(cU)}</div><div class="m-s">inversión inicial</div></div>
+    <div class="m ar"><div class="m-l">OPEX anual (Año 1)</div><div class="m-v">${FMK(oU)}</div><div class="m-s">costos operativos</div></div>
+    <div class="m ac"><div class="m-l">Beneficio anual (Año 1)</div><div class="m-v">${FMK(bU)}</div><div class="m-s">ahorro total + recuperación</div></div>`;
 
   el('sum-kpis').innerHTML = `
-    <div class="m ag"><div class="m-l">Payback period</div><div class="m-v">${payback<100?payback+' mo':'N/A'}</div><div class="m-s">from start of implementation</div></div>
-    <div class="m ap"><div class="m-l">5-Year ROI</div><div class="m-v">${roi5}%</div><div class="m-s">net benefit / total investment</div></div>
-    <div class="m ao"><div class="m-l">CAPEX multiple</div><div class="m-v">${multiple}×</div><div class="m-s">cumulative / initial investment</div></div>
-    <div class="m ac"><div class="m-l">Estimated IRR</div><div class="m-v">${irr}%</div><div class="m-s">internal rate of return</div></div>
-    <div class="m"><div class="m-l">Year 1 net flow</div><div class="m-v">${(years[0].net>=0?'+':'')+FMK(years[0].net)}</div><div class="m-s">first year result</div></div>
-    <div class="m"><div class="m-l">Benefit/Cost ratio (Yr 1)</div><div class="m-v">${(bU/(cU+oU)).toFixed(1)}×</div><div class="m-s">annual benefit vs total year 1 cost</div></div>`;
+    <div class="m ag"><div class="m-l">Período de recuperación</div><div class="m-v">${payback<100?payback+' mo':'N/A'}</div><div class="m-s">desde inicio de implementación</div></div>
+    <div class="m ap"><div class="m-l">ROI 5 años</div><div class="m-v">${roi5}%</div><div class="m-s">beneficio neto / inversión total</div></div>
+    <div class="m ao"><div class="m-l">Múltiplo sobre CAPEX</div><div class="m-v">${multiple}×</div><div class="m-s">cumulative / inversión inicial</div></div>
+    <div class="m ac"><div class="m-l">TIR estimada</div><div class="m-v">${irr}%</div><div class="m-s">tasa interna de retorno</div></div>
+    <div class="m"><div class="m-l">Flujo neto Año 1</div><div class="m-v">${(years[0].net>=0?'+':'')+FMK(years[0].net)}</div><div class="m-s">resultado primer año</div></div>
+    <div class="m"><div class="m-l">Ratio beneficio/costo (Año 1)</div><div class="m-v">${(bU/(cU+oU)).toFixed(1)}×</div><div class="m-s">beneficio anual vs costo total año 1</div></div>`;
 
   el('sum-total').innerHTML = `
-    <div><div class="tb-label">AI COLLECTION NEGOTIATOR · EXECUTIVE SUMMARY<span>310 agents · Cobrint · Altitude · Creative · ThinkChat</span></div></div>
+    <div><div class="tb-label">NEGOCIADOR IA · RESUMEN EJECUTIVO<span>310 agentes · Cobrint · Altitude · Creative · ThinkChat</span></div></div>
     <div><div class="tb-label">CAPEX</div><div class="tb-val tb-gold">${FMK(cU)}</div></div>
-    <div><div class="tb-label">Year 1 net</div><div class="tb-val tb-green">${(years[0].net>=0?'+':'')+FMK(years[0].net)}</div></div>
+    <div><div class="tb-label">Neto Año 1</div><div class="tb-val tb-green">${(years[0].net>=0?'+':'')+FMK(years[0].net)}</div></div>
     <div><div class="tb-label">Payback</div><div class="tb-val tb-cyan">${payback<100?payback+' mo':'N/A'}</div></div>`;
 
-  el('sum-note').textContent = `5-year projection. OPEX grows 5%/year (inflation + scaling). Benefits grow 8%/year (model improvement + adoption growth). CAPEX fully invested in Year 1. Delinquent portfolio: ${FMK(g.cart)}. Internal collectors: ${g.ntele} (budget ${FMK(g.tele)}/yr). External collectors: ${g.next} (budget ${FMK(g.ext)}/yr). Recovery improvement: ${(g.recup*100).toFixed(1)}% of delinquent portfolio. IRR calculated via Newton-Raphson approximation.`;
+  el('sum-note').textContent = `Proyección a 5 años. OPEX crece 5%/año (inflación + escalamiento). Beneficios crecen 8%/año (mejora de modelos + adopción creciente). CAPEX invertido íntegramente en Año 1. Cartera atrasada: ${FMK(g.cart)}. Telecobradores internos: ${g.ntele} (presupuesto ${FMK(g.tele)}/yr). Cobradores externos: ${g.next} (presupuesto ${FMK(g.ext)}/yr). Mejora de recuperación: ${(g.recup*100).toFixed(1)}% de la cartera atrasada. TIR calculada mediante aproximación Newton-Raphson.`;
 }
 
 function estimateIRR(years, capex) {
@@ -413,7 +413,7 @@ function estimateIRR(years, capex) {
   return (rate*100).toFixed(0);
 }
 
-function ua(){ renderCapex(); renderOpex(); renderBenefits(); renderSummary(); }
+function ua(){ renderCapex(); renderOpex(); renderBeneficios(); renderSummary(); }
 function showTab(name){
   const names=['capex','opex','benefits','summary'];
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',names[i]===name));
